@@ -1,7 +1,8 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#define SIZE 100
 #define MAX_SMALL 30
 extern char* ERR_MSG;
 
@@ -78,7 +79,7 @@ void test_elementy_parzyste_Piotrek()
 	wypisz_tablice(t, MAX_SMALL);
 	elementy_parzyste_Piotrek(t, MAX_SMALL);
 }
-/*
+
 void elementy_parzyste(int* t, int n)
 {
 	for (int i = 0; i < n; ++i) {
@@ -87,7 +88,7 @@ void elementy_parzyste(int* t, int n)
 		}
 	}
 }
-*/
+
 
 int ile_razy(int* a, int n, int b)
 {
@@ -99,3 +100,71 @@ int ile_razy(int* a, int n, int b)
 	}
 	return licznik;
 }
+
+int Czypotegadwojki(int a)
+{
+	while (a >= 2)
+	{
+		if (a & 1)
+		{
+			return 0;
+		}
+		a >>= 1;
+	}
+	return 1;
+
+}
+
+
+int suma_potega_dwa(int* a, int n)
+{
+	int suma = 0;
+	for (int i = 0;i < n;i++) {
+		if ((i % 2 == 0) && Czypotegadwojki(a[i])) {
+			suma = suma + a[i];
+		}
+	}
+	return suma;
+}
+
+
+int czy_pierwsza(unsigned long a)
+{
+	if (a == 1)
+	{
+		return 0;
+	}
+	for (int i = a - 1; i > 1; i--)
+	{
+		if (a % i == 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int srednia_liczby_pierwsze(int* a, int n) {
+
+	int count = 0;
+	int sum = 0;
+
+	for (int i = 0;i < n;i++) {
+		if (czy_pierwsza(a)) {
+			count = count + 1;
+			sum = sum + a[i];
+		}
+	}
+	return sum / count;
+}
+
+
+void testy_zad_domowe() {
+	int T[SIZE];
+	generuj_tablice(T, SIZE, 2, 1025);
+	wypisz_tablice(T, SIZE);
+	printf("\nZad 1 wynik: %d ", srednia_liczby_pierwsze(T, SIZE));
+	printf("\nZad 2 wynik: %d ", suma_potega_dwa(T, SIZE));
+
+}
+*/

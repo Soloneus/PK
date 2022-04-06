@@ -22,7 +22,7 @@ void cw4_test_czy_potega_dwojki() // ???
 	}
 	printf("liczba %d %s ",a, cw4_czy_potega_dwojki(a) ? "jest potega 2" : "nie jest potega 2");
 }
-
+/*
 
 void cw4_postac_binarna(short a) // ???
 {
@@ -43,6 +43,8 @@ void cw4_test_postac_binarna() // ???
 	}
 	cw4_postac_binarna(a);
 }
+
+*/
 
 int cw4_czy_doskonala(unsigned int a)		// Jest doskonala kiedy jest suma jej dzielnikow (oprocz jej samej)
 {
