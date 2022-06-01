@@ -1,0 +1,326 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include "kolokwium_przygotowania.h"
+#define sgn(x) ( (x) > (0) ? (1) : ( (x) == (0) ? (0) : (-1) ) )
+#define SQR(x) ( (x)*(x) )
+void zad1_zestawB() {
+	int podstawa;
+	printf("Podaj dlugosc podstawy trojkata: \n");
+	scanf_s("%d", &podstawa);
+	int n = podstawa;
+	int h = n / 2;
+	for (int i = 1;i <= n;i++) {
+		printf("o");
+	}
+	printf("\n");
+	for (int i = 1;i <= h;i++)
+	{
+		for (int j = 1; j <= n;j++) {
+			if (j <= i || j > n - i) {
+				printf("o");
+			}
+			else {
+				printf(" ");
+			}
+
+		}
+		printf("\n");
+	}
+}
+
+void zad1_zestawA() {
+	int podstawa;
+	printf("Podaj dlugosc podstawy trojkata: \n");
+	scanf_s("%d", &podstawa);
+	int n = podstawa;
+	int h = n / 2;
+	for (int i = h; i >=1;i--) {
+		for (int j = 1; j <= n;j++) {
+			if (j <= i || j > n - i)
+			{
+				printf("o");
+			}
+			else {
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+	for (int z = 1;z <= n;z++) {
+		printf("o");
+	}
+
+}
+
+void korona() {
+	int podstawa;
+	printf("Podaj dlugosc podstawy trojkata: \n");
+	scanf_s("%d", &podstawa);
+	char znak;
+	printf("Podaj znak: \n");
+	scanf_s(" %c", &znak,sizeof(znak));
+	printf("\n");
+	int n = podstawa;
+	int h = n / 2;
+	for (int i = 1;i <= h;i++) {
+		for (int j = 1;j <= n;j++) {
+			if (j <= i || j > n - i ||((j>n/2-i+1)&&(j<=n/2+i))) { //ta jedynka w przedziale, chuj jej w dupe
+				printf("%c ", znak);
+			}
+			else {
+				printf("  ");
+			}
+		}
+		printf("\n");
+	}
+}
+void pajacyk() {
+	int podstawa;
+	printf("Podaj dlugosc podstawy trojkata: \n");
+	scanf_s("%d", &podstawa);
+	char znak;
+	printf("Podaj znak: \n");
+	scanf_s(" %c", &znak, sizeof(znak));
+	printf("\n");
+	int n = podstawa;
+	int h = n / 2;
+	for (int i = 0;i < h;i++) {
+		for (int j = 1;j <= n;j++) {
+			if (j >= n / 2 - i+1 && j <= n / 2 + i+1 && i<3) {
+				printf(" o");
+			}
+			else if (i<h/2) {
+				printf("  ");
+			}
+			else if (i>=h/2){
+				printf(" o");
+			}
+		}
+		printf("\n");
+
+	}
+}
+
+int random_numbers() {
+	float number;
+	int zero=0;
+	int positive=0;
+	int negative=0;
+	srand((unsigned int)time(0));
+	for (int i = 0; i < 1000; ++i) {
+		number = (double)rand() / RAND_MAX * 41.0 - 20.5; //!!!
+		switch (sgn(number)) {
+		case 1:
+			positive = positive + 1;
+			break;
+		case -1:
+			negative = negative + 1;
+			break;
+		case 0:
+			zero = zero + 1;
+			break;
+		}
+	}	
+	printf("Negatywne wystepuje %d razy, zero %d razy, pozytywne %d razy", negative, zero, positive);
+	}
+
+typedef struct {
+	double re, im;
+} Lzespolona;
+
+char* lzesp2str(Lzespolona x)
+{
+	int n = 30 * sizeof(char);
+	char* s = (char*)malloc(n);
+	if (s == NULL) {
+		return "";
+	}
+	sprintf_s(s, n, "%.2lf%+.2lfi", x.re, x.im);
+	return s;
+}
+
+Lzespolona add(Lzespolona x, Lzespolona y)
+{
+	Lzespolona w = { x.re + y.re, x.im + y.im };
+	return w;
+}
+
+void test_lzespolone()
+{
+	Lzespolona x = { 3,4 };
+	Lzespolona y = { -9,4 };
+	printf("%s\n", lzesp2str(add(x, y)));
+}
+
+void czytaj_tekst_z_pliku(char* fname)
+{
+	FILE* fin;
+	char str[50] = "";
+	int l_words = 0;
+	int l_chars = 0;
+
+	if (fopen_s(&fin, fname, "r") != 0) {
+		printf("Blad otwarcia pliku!\n");
+		return;
+	}
+	while (!feof(fin)) {
+		if (fscanf_s(fin, "%s", str, (unsigned int)_countof(str)) < 1) {
+			continue;
+		}
+		l_words++;
+		l_chars += (int)strlen(str);
+	}
+	printf("Liczba wyrazow: %d\nLiczba znakow bez spacji: %d\n", l_words, l_chars);
+	fclose(fin); //!!!!!!!!
+}
+
+void ZapisNaPlik(char* nazwa) {
+	char buf[] = "Odd";
+	char* str2, * str = strtok_s(buf, " ,.", &str2);
+	FILE* fp;
+	if (fopen_s(&fp, nazwa, "w") != 0) {
+		perror("Blad");
+		return;
+	}
+	while (str != NULL) {
+		fprintf(fp, "%s ", str);
+		str = strtok_s(NULL, " ,.", &str2);
+	}
+	fclose(fp);
+}
+#define FUNCTION_WITH_TXT __func__ + ".txt"
+
+int podsumowanie_KL(ulong **a,int n, int m,ulong prog) {
+	int suma = 0;
+	char str[80];
+	//strcpy_s(str,30,__func__);
+	//strcpy_s(str,10, ".txt");
+
+	int min= a[0][0];
+	int max = a[0][0];
+	int srednia;
+	int count = 0;
+	for (int i = 0;i < n;i++) {
+		for (int j = 0;j < m;j++) {
+			printf("%d ", SQR(a[i][j]));
+			if (a[i][j] < min && SQR(a[i][j]) > prog) {
+
+				min = a[i][j];
+			}
+			if (a[i][j] > max && SQR(a[i][j]) > prog) {
+				max = a[i][j];
+			}
+			if (SQR(a[i][j]) > prog) {
+				suma = suma + a[i][j];
+				count = count + 1;
+			}
+		}
+	}
+	srednia = suma / count;
+	//printf("%d, %d, %d", min, max, suma);
+	FILE* fp;
+	if (fopen_s(&fp, "123.txt", "w") != 0) {
+		perror("Blad");
+		return;
+	}
+	fprintf(fp, "%s ", "Maximum: ");
+	fprintf(fp, "%d\n", max);
+	fprintf(fp, "%s ", "Minimum: ");
+	fprintf(fp, "%d\n", min);
+	fprintf(fp, "%s ", "Srednia: ");
+	fprintf(fp, "%d\n", srednia);
+	fprintf(fp, "%s ", "Suma: ");
+	fprintf(fp, "%d\n", suma);
+
+	fclose(fp);
+	//printf("%s", __func__);
+
+}
+void podsumowanie_KL_test() {
+
+	int r;
+	int c;
+	ulong prog;
+	ulong** tab;
+
+	printf("Podaj ilosc wierszy: \n");
+	scanf_s("%d", &r);
+	printf("Podaj ilosc kolumn: \n");
+	scanf_s("%d", &c);
+	printf("Podaj prog: \n");
+	scanf_s("%lu", &prog);
+
+	srand((unsigned int)time(0));
+
+	tab = (ulong**)malloc(r * sizeof(*tab)); if (tab == NULL) { return; }
+	for (int i = 0; i < r; ++i) {
+		tab[i] = (ulong*)malloc(c * sizeof(*tab)); if (tab[i] == NULL) { return; }
+	}
+	for (int i = 0; i < r; ++i) {
+		for (int j = 0; j < c;j++) {
+			tab[i][j] = rand() % (1000 - 1 + 1) + 1;
+			printf("%d ", tab[i][j]);
+		}
+		printf("\n");
+	}
+	podsumowanie_KL(tab, r, c, prog);
+}
+
+void zamiana_znakow(char* zdanie) {
+	int lenght = strlen(zdanie);
+	for (int i = 0; i < lenght;i++) {
+		if (isupper(zdanie[i])) {
+			zdanie[i] = tolower(zdanie[i]);
+		}
+		else {
+			zdanie[i] = toupper(zdanie[i]);
+		}
+		
+	}
+	printf("\n%s", zdanie);
+}
+void test_zamiana() {
+	char zdanie[50];
+	printf("Podaj zdanie do zamiany:\n");
+	fgets(zdanie, 50, stdin);
+	zamiana_znakow(zdanie);
+}
+
+typedef struct Wynik {
+	int samogloski;
+	int spacje;
+};
+
+void samogloski(char* zdanie) { // struct trzeba dodac
+	int lenght = strlen(zdanie);
+	int space_count = 0;
+	int samo_count = 0;
+	for (int i = 0; i < lenght;i++) {
+		if (isspace(zdanie[i])) {
+			space_count = space_count + 1;
+		}
+		if (zdanie[i] == 'A' || zdanie[i] == 'a' || zdanie[i] == 'E' || zdanie[i] == 'e' || zdanie[i] == 'I' || zdanie[i] == 'i' || zdanie[i] == 'O' || zdanie[i] == 'o' || zdanie[i] == 'U' ||
+			zdanie[i] == 'u' || zdanie[i] == 'Y' || zdanie[i] == 'y') {
+			samo_count = samo_count + 1;
+		}
+	}
+	printf("%d, %d", space_count-1, samo_count);
+}
+
+
+void test_samogloski() {
+	char zdanie[50];
+	printf("Podaj zdanie do zamiany:\n");
+	fgets(zdanie, 50, stdin);
+	samogloski(zdanie);
+}
+
+int parzysta_cyfra(llong a) {
+	if ((a % 10)%2 == 0) {
+		//printf("%d\n", a);
+		return (a % 10);
+	}
+	return parzysta_cyfra(a /10);
+}
